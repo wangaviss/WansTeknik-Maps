@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Wansteknik · Data Pelanggan</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bg:#000;--panel:#0d0f14;--card:#131722;--line:#1f2633;--blue:#2563eb;--blue2:#60a5fa;--text:#eef3ff;--muted:#8b95a7;--danger:#ef4444;--r:14px}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+body{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+button,input,textarea{font:inherit;color:inherit}
+a{color:var(--blue2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--blue);border:0;color:#fff;padding:11px 16px;border-radius:10px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn.danger{background:var(--danger)}
+.btn.sm{padding:7px 11px;font-size:13px}
+.btn.block{width:100%}
+input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none}
+input:focus{border-color:var(--blue)}
+.field label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.grow{flex:1;min-width:0}
+header{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 12px) 14px 10px;background:#000;border-bottom:1px solid var(--line)}
+.brand{font-weight:800;letter-spacing:.3px;font-size:18px}
+.brand span{color:var(--blue2)}
+.stats{font-size:12px;color:var(--muted);margin-top:2px}
+.searchbar{padding:10px 12px;background:#000;border-bottom:1px solid var(--line)}
+.lookup{margin:10px 12px 0;background:#0b1a3a;border:1px solid var(--blue);border-radius:var(--r);padding:12px}
+.lookup .muted{margin-top:4px}
+main{flex:1;position:relative;min-height:0;display:flex;flex-direction:column}
+#viewMap{flex:1;position:relative}
+#map{position:absolute;inset:0}
+#viewList{flex:1;overflow:auto;padding:12px}
+.code{display:inline-block;background:#0b2a6b;color:#93c5fd;border:1px solid var(--blue);padding:3px 8px;border-radius:8px;font-weight:800;letter-spacing:1px;font-variant-numeric:tabular-nums}
+.item{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px;margin-bottom:10px}
+.row{display:flex;align-items:center;gap:8px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.muted{color:var(--muted);font-size:14px;margin-top:3px;word-break:break-word}
+.muted a{color:var(--blue2)}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+.pin{background:var(--blue);color:#fff;font-weight:800;font-size:12px;padding:5px 8px;border-radius:999px;border:2px solid #000;box-shadow:0 0 0 3px rgba(37,99,235,.35);text-align:center;white-space:nowrap;letter-spacing:.5px}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#111;color:var(--text)}
+.leaflet-popup-content{margin:12px 14px;min-width:200px}
+.leaflet-container a{color:var(--blue2)}
+.leaflet-control-zoom a{background:#111!important;color:var(--text)!important;border-color:var(--line)!important}
+#pickBanner{position:absolute;top:10px;left:10px;right:10px;background:var(--blue);color:#fff;padding:10px 12px;border-radius:12px;z-index:1000;display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:14px}
+.tabs{display:flex;background:#000;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{flex:1;background:none;border:0;padding:14px;color:var(--muted);font-weight:600;cursor:pointer}
+.tabs button.on{color:var(--blue2);box-shadow:inset 0 3px 0 var(--blue)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:flex-end;justify-content:center;z-index:2000}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 0 0;padding:18px;width:100%;max-width:520px;max-height:92dvh;overflow:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+@media(min-width:700px){.overlay{align-items:center}.card{border-radius:18px}}
+.err{color:var(--danger);font-size:14px;min-height:18px}
+.title{font-size:18px;font-weight:700}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.btnrow .btn{flex:1}
+#toast{position:fixed;left:50%;bottom:86px;transform:translate(-50%,20px);background:var(--blue);color:#fff;padding:10px 16px;border-radius:10px;opacity:0;transition:.25s;pointer-events:none;z-index:3000;max-width:90%;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<!-- ====== LOGIN ADMIN ====== -->
+<div id="login" class="overlay" hidden>
+  <form class="card" id="loginForm" style="max-width:380px">
+    <div class="brand">Wans<span>teknik</span></div>
+    <div class="muted">Masuk sebagai admin untuk melihat data pelanggan.</div>
+    <input type="email" id="lEmail" placeholder="Email admin" required autocomplete="username">
+    <input type="password" id="lPass" placeholder="Password" required autocomplete="current-password">
+    <button class="btn block" type="submit">Masuk</button>
+    <div class="err" id="lErr"></div>
+  </form>
+</div>
+
+<!-- ====== APLIKASI ====== -->
+<div id="app" hidden style="display:flex;flex-direction:column;flex:1;min-height:0">
+  <header>
+    <div class="grow">
+      <div class="brand">Wans<span>teknik</span></div>
+      <div class="stats" id="stats">Memuat...</div>
+    </div>
+    <button class="btn sm ghost" id="btnBackup">Backup</button>
+    <button class="btn sm" id="btnAdd">+ Tambah</button>
+  </header>
+
+  <div class="searchbar">
+    <input id="q" placeholder="Cari kode 4 angka, nama, telepon, alamat" autocomplete="off" inputmode="search">
+  </div>
+  <div id="lookup"></div>
+
+  <main>
+    <section id="viewMap">
+      <div id="map"></div>
+      <div id="pickBanner" hidden>
+        <span>Ketuk peta untuk memilih lokasi</span>
+        <button class="btn sm ghost" id="cancelPick">Batal</button>
+      </div>
+    </section>
+    <section id="viewList" hidden><div id="list"></div></section>
+  </main>
+
+  <nav class="tabs">
+    <button data-view="map" class="on">Peta</button>
+    <button data-view="list">Daftar</button>
+  </nav>
+</div>
+
+<!-- ====== FORM TAMBAH / EDIT ====== -->
+<div id="modal" class="overlay" hidden>
+  <form class="card" id="cForm">
+    <div class="title" id="mTitle">Tambah pelanggan</div>
+    <div class="field"><label>Kode unit (4 angka)</label><input id="fKode" maxlength="4" inputmode="numeric" pattern="\d{4}" placeholder="contoh: 1024" required></div>
+    <div class="field"><label>Nama</label><input id="fNama" placeholder="Nama pelanggan" required></div>
+    <div class="field"><label>Nomor telepon</label><input id="fTelp" inputmode="tel" placeholder="08xxxxxxxxxx"></div>
+    <div class="field"><label>Alamat</label><textarea id="fAlamat" rows="2" placeholder="Alamat lengkap"></textarea></div>
+    <div class="field">
+      <label>Lokasi (lat, lng) atau tempel link Google Maps</label>
+      <input id="fCoord" placeholder="-6.2000, 106.8167">
+    </div>
+    <div class="btnrow">
+      <button type="button" class="btn ghost" id="btnLoc">Lokasi saya</button>
+      <button type="button" class="btn ghost" id="btnPick">Pilih di peta</button>
+    </div>
+    <div class="btnrow">
+      <button type="submit" class="btn">Simpan</button>
+      <button type="button" class="btn ghost" id="fCancel">Batal</button>
+    </div>
+    <button type="button" class="btn danger block" id="fDel">Hapus pelanggan</button>
+  </form>
+</div>
+
+<!-- ====== MENU BACKUP ====== -->
+<div id="sheet" class="overlay" hidden>
+  <div class="card">
+    <div class="title">Backup & akun</div>
+    <button class="btn block" id="btnExport">Unduh backup (JSON)</button>
+    <button class="btn block ghost" id="btnRestore">Pulihkan dari file backup</button>
+    <input type="file" id="fileRestore" accept=".json,application/json" hidden>
+    <div class="muted" id="sumInfo"></div>
+    <button class="btn block danger" id="btnLogout">Keluar</button>
+    <button class="btn block ghost" id="btnClose">Tutup</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   KONFIGURASI SUPABASE — ganti dengan data project kamu
+   Dashboard Supabase > Project Settings > API
+   ============================================================ */
+const CFG = {
+  url: 'https://GANTI-PROJECT-ID.supabase.co',
+  key: 'GANTI-ANON-PUBLIC-KEY'
+};
+
+const sb = supabase.createClient(CFG.url, CFG.key);
+
+let customers = [];
+let map = null, markers = null;
+let pickMode = false;
+let formDraft = { editId: null, kode: '', nama: '', telepon: '', alamat: '', coord: '' };
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mapsSearch = (la, ln) => `https://www.google.com/maps/search/?api=1&query=${la},${ln}`;
+const mapsNav = (la, ln) => `https://www.google.com/maps/dir/?api=1&destination=${la},${ln}`;
+
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ---------------- LOGIN ---------------- */
+$('loginForm').onsubmit = async e => {
+  e.preventDefault();
+  $('lErr').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({
+    email: $('lEmail').value.trim(),
+    password: $('lPass').value
+  });
+  if (error) { $('lErr').textContent = 'Email atau password salah'; return; }
+  $('lPass').value = '';
+  showApp();
+};
+
+async function init() {
+  const { data } = await sb.auth.getSession();
+  if (data.session) showApp();
+  else $('login').hidden = false;
+}
+
+async function showApp() {
+  $('login').hidden = true;
+  $('app').hidden = false;
+  if (!map) initMap();
+  await loadData();
+}
+
+$('btnLogout').onclick = async () => {
+  await sb.auth.signOut();
+  location.reload();
+};
+
+/* ---------------- DATA ---------------- */
+async function loadData() {
+  const { data, error } = await sb.from('pelanggan').select('*').order('kode');
+  if (error) {
+    toast('Gagal memuat data: ' + error.message);
+    return;
+  }
+  customers = data || [];
+  render();
+}
+
+function render() {
+  const q = $('q').value.trim().toLowerCase();
+  const withPin = customers.filter(c => c.lat != null && c.lng != null).length;
+  $('stats').textContent = `${customers.length} pelanggan · ${withPin} titik di peta`;
+
+  const list = customers.filter(c =>
+    !q || [c.kode, c.nama, c.telepon, c.alamat].some(v => String(v || '').toLowerCase().includes(q))
+  );
+
+  renderLookup(q);
+  renderList(list);
+  renderMarkers(list);
+}
+
+// Cek cepat: ketik 4 angka kode -> tampil nama & nomor
+function renderLookup(q) {
+  const c = /^\d{4}$/.test(q) ? customers.find(x => x.kode === q) : null;
+  if (!c) { $('lookup').innerHTML = ''; return; }
+  $('lookup').innerHTML = `
+    <div class="lookup">
+      <div class="row"><span class="code">${esc(c.kode)}</span><b class="grow">${esc(c.nama)}</b></div>
+      <div class="muted">${c.telepon ? `Telp: <a href="tel:${esc(c.telepon)}">${esc(c.telepon)}</a>` : 'Nomor belum diisi'}</div>
+      <div class="muted">${esc(c.alamat || '')}</div>
+    </div>`;
+}
+
+function renderList(list) {
+  $('list').innerHTML = list.length ? list.map(c => `
+    <div class="item">
+      <div class="row"><span class="code">${esc(c.kode)}</span><b class="grow">${esc(c.nama)}</b></div>
+      ${c.telepon ? `<div class="muted">Telp: <a href="tel:${esc(c.telepon)}">${esc(c.telepon)}</a></div>` : ''}
+      <div class="muted">${esc(c.alamat || 'Alamat belum diisi')}</div>
+      <div class="acts">
+        ${c.lat != null ? `
+          <a class="btn sm ghost" target="_blank" rel="noopener" href="${mapsSearch(c.lat, c.lng)}">Buka Maps</a>
+          <a class="btn sm" target="_blank" rel="noopener" href="${mapsNav(c.lat, c.lng)}">Navigasi</a>` : ''}
+        <button class="btn sm ghost" onclick="openForm(${c.id})">Edit</button>
+      </div>
+    </div>`).join('')
+  : `<div class="empty">Belum ada data.<br>Tekan "+ Tambah" untuk menambah pelanggan.</div>`;
+}
+
+/* ---------------- PETA ---------------- */
+function initMap() {
+  map = L.map('map', { zoomControl: false }).setView([-6.2, 106.82], 12);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+  markers = L.layerGroup().addTo(map);
+
+  map.on('click', e => {
+    if (!pickMode) return;
+    pickMode = false;
+    $('pickBanner').hidden = true;
+    formDraft.coord = `${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}`;
+    openForm(null, true);
+  });
+}
+
+function renderMarkers(list) {
+  if (!markers) return;
+  markers.clearLayers();
+  list.filter(c => c.lat != null && c.lng != null).forEach(c => {
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="pin">${esc(c.kode)}</div>`,
+      iconSize: [56, 28],
+      iconAnchor: [28, 28]
+    });
+    const m = L.marker([c.lat, c.lng], { icon });
+    m.bindPopup(`
+      <div>
+        <div><span class="code">${esc(c.kode)}</span> <b>${esc(c.nama)}</b></div>
+        <div class="muted">${c.telepon ? `Telp: <a href="tel:${esc(c.telepon)}">${esc(c.telepon)}</a>` : 'Nomor belum diisi'}</div>
+        <div class="muted">${esc(c.alamat || '')}</div>
+        <div class="acts">
+          <a class="btn sm ghost" target="_blank" rel="noopener" href="${mapsSearch(c.lat, c.lng)}">Buka Maps</a>
+          <a class="btn sm" target="_blank" rel="noopener" href="${mapsNav(c.lat, c.lng)}">Navigasi</a>
+          <button class="btn sm ghost" onclick="openForm(${c.id})">Edit</button>
+        </div>
+      </div>`);
+    markers.addLayer(m);
+  });
+}
+
+function setView(v) {
+  $('viewMap').hidden = v !== 'map';
+  $('viewList').hidden = v !== 'list';
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.view === v));
+  if (v === 'map' && map) setTimeout(() => map.invalidateSize(), 60);
+}
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => setView(b.dataset.view));
+
+/* ---------------- FORM ---------------- */
+function readDraft() {
+  formDraft = {
+    ...formDraft,
+    kode: $('fKode').value.trim(),
+    nama: $('fNama').value.trim(),
+    telepon: $('fTelp').value.trim(),
+    alamat: $('fAlamat').value.trim(),
+    coord: $('fCoord').value.trim()
+  };
+}
+
+function openForm(id, keepDraft) {
+  if (!keepDraft) {
+    const c = id != null ? customers.find(x => x.id === id) : null;
+    formDraft = {
+      editId: c ? c.id : null,
+      kode: c ? c.kode : '',
+      nama: c ? c.nama : '',
+      telepon: c ? (c.telepon || '') : '',
+      alamat: c ? (c.alamat || '') : '',
+      coord: c && c.lat != null ? `${c.lat}, ${c.lng}` : ''
+    };
+  }
+  $('mTitle').textContent = formDraft.editId != null ? 'Edit pelanggan' : 'Tambah pelanggan';
+  $('fKode').value = formDraft.kode;
+  $('fNama').value = formDraft.nama;
+  $('fTelp').value = formDraft.telepon;
+  $('fAlamat').value = formDraft.alamat;
+  $('fCoord').value = formDraft.coord;
+  $('fDel').hidden = formDraft.editId == null;
+  $('modal').hidden = false;
+}
+
+$('btnAdd').onclick = () => openForm(null);
+$('fCancel').onclick = () => $('modal').hidden = true;
+
+$('btnLoc').onclick = () => {
+  if (!navigator.geolocation) return toast('Perangkat tidak mendukung lokasi');
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      $('fCoord').value = `${p.coords.latitude.toFixed(6)}, ${p.coords.longitude.toFixed(6)}`;
+      toast('Lokasi diisi');
+    },
+    () => toast('Izin lokasi ditolak / tidak tersedia'),
+    { enableHighAccuracy: true, timeout: 15000 }
+  );
+};
+
+$('btnPick').onclick = () => {
+  readDraft();
+  $('modal').hidden = true;
+  pickMode = true;
+  setView('map');
+  $('pickBanner').hidden = false;
+};
+
+$('cancelPick').onclick = () => {
+  pickMode = false;
+  $('pickBanner').hidden = true;
+  openForm(null, true);
+};
+
+$('cForm').onsubmit = async e => {
+  e.preventDefault();
+  const kode = $('fKode').value.trim();
+  if (!/^\d{4}$/.test(kode)) return toast('Kode unit harus tepat 4 angka');
+
+  const nama = $('fNama').value.trim();
+  if (!nama) return toast('Nama wajib diisi');
+
+  const coordTxt = $('fCoord').value.trim();
+  let lat = null, lng = null;
+  if (coordTxt) {
+    const m = coordTxt.match(/(-?\d{1,3}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/);
+    if (!m) return toast('Format lokasi tidak dikenali. Contoh: -6.2000, 106.8167');
+    lat = parseFloat(m[1]);
+    lng = parseFloat(m[2]);
+  }
+
+  const row = {
+    kode,
+    nama,
+    telepon: $('fTelp').value.trim() || null,
+    alamat: $('fAlamat').value.trim() || null,
+    lat,
+    lng
+  };
+
+  const r = formDraft.editId != null
+    ? await sb.from('pelanggan').update(row).eq('id', formDraft.editId)
+    : await sb.from('pelanggan').insert(row);
+
+  if (r.error) {
+    return toast(r.error.code === '23505'
+      ? 'Kode ini sudah dipakai pelanggan lain'
+      : 'Gagal menyimpan: ' + r.error.message);
+  }
+
+  $('modal').hidden = true;
+  toast('Data tersimpan');
+  await loadData();
+};
+
+$('fDel').onclick = async () => {
+  if (formDraft.editId == null) return;
+  if (!confirm('Hapus pelanggan ini?')) return;
+  const { error } = await sb.from('pelanggan').delete().eq('id', formDraft.editId);
+  if (error) return toast('Gagal menghapus: ' + error.message);
+  $('modal').hidden = true;
+  toast('Data dihapus');
+  await loadData();
+};
+
+/* ---------------- BACKUP ---------------- */
+$('q').oninput = render;
+
+$('btnBackup').onclick = () => {
+  $('sumInfo').textContent = `Total ${customers.length} pelanggan tersimpan.`;
+  $('sheet').hidden = false;
+};
+$('btnClose').onclick = () => $('sheet').hidden = true;
+
+$('btnExport').onclick = () => {
+  const payload = {
+    app: 'wansteknik',
+    exported_at: new Date().toISOString(),
+    count: customers.length,
+    data: customers
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `backup-wansteknik-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+
+$('btnRestore').onclick = () => $('fileRestore').click();
+
+$('fileRestore').onchange = async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const j = JSON.parse(await f.text());
+    const arr = Array.isArray(j) ? j : j.data;
+    if (!Array.isArray(arr)) throw new Error('format');
+
+    // Hilangkan duplikat kode & data tidak valid
+    const map2 = new Map();
+    arr.forEach(r => {
+      const kode = String(r.kode ?? '');
+      if (/^\d{4}$/.test(kode) && r.nama) {
+        map2.set(kode, {
+          kode,
+          nama: r.nama,
+          telepon: r.telepon || null,
+          alamat: r.alamat || null,
+          lat: r.lat ?? null,
+          lng: r.lng ?? null
+        });
+      }
+    });
+    const rows = [...map2.values()];
+    if (!rows.length) return toast('Tidak ada data valid di file');
+    if (!confirm(`Pulihkan ${rows.length} data? Data dengan kode yang sama akan ditimpa.`)) return;
+
+    for (let i = 0; i < rows.length; i += 500) {
+      const { error } = await sb.from('pelanggan').upsert(rows.slice(i, i + 500), { onConflict: 'kode' });
+      if (error) return toast('Gagal memulihkan: ' + error.message);
+    }
+    toast(`${rows.length} data berhasil dipulihkan`);
+    $('sheet').hidden = true;
+    await loadData();
+  } catch (err) {
+    toast('File backup tidak valid');
+  } finally {
+    e.target.value = '';
+  }
+};
+
+/* ---------------- START ---------------- */
+init();
+</script>
+</body>
+</html>
