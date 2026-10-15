@@ -155,9 +155,10 @@ main{flex:1;position:relative;min-height:0;display:flex;flex-direction:column}
    KONFIGURASI SUPABASE — ganti dengan data project kamu
    Dashboard Supabase > Project Settings > API
    ============================================================ */
+
 const CFG = {
-  url:https://leztyxlqeybrjsdkndkq.supabase.co ,
-  key:sb_publishable_giQLIC9qFPU-4HVQDd4vGw_sIdwOg8z
+  url: 'https://leztyxlqeybrjsdkndkq.supabase.co',
+  key: 'sb_publishable_giQLIC9qFPU-4HVQDd4vGw_sIdwOg8z'
 };
 
 const sb = supabase.createClient(CFG.url, CFG.key);
@@ -388,14 +389,35 @@ $('cForm').onsubmit = async e => {
   const nama = $('fNama').value.trim();
   if (!nama) return toast('Nama wajib diisi');
 
-  const coordTxt = $('fCoord').value.trim();
-  let lat = null, lng = null;
-  if (coordTxt) {
-    const m = coordTxt.match(/(-?\d{1,3}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/);
-    if (!m) return toast('Format lokasi tidak dikenali. Contoh: -6.2000, 106.8167');
-    lat = parseFloat(m[1]);
-    lng = parseFloat(m[2]);
+  
+const coordTxt = $('fCoord').value.trim();
+let lat = null, lng = null;
+
+if (coordTxt) {
+  const m = coordTxt.match(
+    /^\s*(-?\d+(?:\.\d+)?)\s*[, ]\s*(-?\d+(?:\.\d+)?)\s*$/
+  );
+
+  if (!m) {
+    return toast(
+      'Masukkan koordinat desimal: -2.9909, 104.7566'
+    );
   }
+
+  lat = Number(m[1]);
+  lng = Number(m[2]);
+
+  if (
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lng) ||
+    lat < -90 || lat > 90 ||
+    lng < -180 || lng > 180
+  ) {
+    return toast('Koordinat latitude atau longitude tidak valid');
+  }
+}
+
+    
 
   const row = {
     kode,
@@ -501,7 +523,26 @@ $('fileRestore').onchange = async e => {
 };
 
 /* ---------------- START ---------------- */
-init();
+(async function startApp() {
+  try {
+    if (typeof L === 'undefined') {
+      throw new Error('Leaflet gagal dimuat');
+    }
+
+    if (typeof supabase === 'undefined') {
+      throw new Error('Library Supabase gagal dimuat');
+    }
+
+    await init();
+  } catch (err) {
+    console.error('Wansteknik error:', err);
+
+    $('login').hidden = false;
+    $('lErr').textContent =
+      'Aplikasi gagal dimuat: ' + err.message;
+  }
+})();
+
 </script>
 </body>
 </html>
