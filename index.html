@@ -2,311 +2,314 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101827">
-  <title>WansTeknik · Data Pelanggan</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WansTeknik - Data Pelanggan</title>
 
-  <link rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet"
+ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
-  <style>
-    :root {
-      --bg: #0b1220;
-      --panel: #111c2e;
-      --panel2: #17243a;
-      --text: #edf4ff;
-      --muted: #9aabc2;
-      --line: #293952;
-      --blue: #3b82f6;
-      --green: #16a34a;
-      --red: #dc2626;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    header {
-      padding: 20px;
-      background: var(--panel);
-      border-bottom: 1px solid var(--line);
-    }
-
-    header h1 {
-      margin: 0 0 6px;
-      font-size: 23px;
-    }
-
-    header p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    main {
-      max-width: 1100px;
-      margin: auto;
-      padding: 16px;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    h2 {
-      margin: 0 0 14px;
-      font-size: 18px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .full { grid-column: 1 / -1; }
-
-    label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 9px;
-      border: 1px solid var(--line);
-      background: #0b1424;
-      color: var(--text);
-      font-size: 15px;
-    }
-
-    textarea {
-      min-height: 76px;
-      resize: vertical;
-    }
-
-    button, .btn {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      border: 0;
-      border-radius: 8px;
-      padding: 10px 13px;
-      font-size: 13px;
-      font-weight: bold;
-      text-decoration: none;
-      cursor: pointer;
-      background: var(--blue);
-      color: white;
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    .secondary { background: #334155; }
-    .success { background: var(--green); }
-    .danger { background: var(--red); }
-    .ghost {
-      background: transparent;
-      border: 1px solid var(--line);
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .stat {
-      padding: 15px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-    }
-
-    .stat span {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 7px;
-    }
-
-    .stat strong { font-size: 23px; }
-
-    #map {
-      width: 100%;
-      height: 340px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #dbeafe;
-    }
-
-    #search {
-      margin-bottom: 12px;
-    }
-
-    .customer {
-      padding: 14px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .customer:last-child { border-bottom: 0; }
-
-    .customer h3 {
-      margin: 0 0 7px;
-      font-size: 16px;
-      overflow-wrap: anywhere;
-    }
-
-    .customer p {
-      margin: 5px 0;
-      font-size: 13px;
-      color: var(--muted);
-      overflow-wrap: anywhere;
-    }
-
-    .small { font-size: 12px; color: var(--muted); }
-    .status { margin: 10px 0; font-size: 13px; color: var(--muted); }
-    .empty { color: var(--muted); padding: 20px 0; text-align: center; }
-
-    .leaflet-popup-content button {
-      margin-top: 7px;
-      width: 100%;
-    }
-
-    .leaflet-popup-content {
-      min-width: 170px;
-    }
-
-    @media (max-width: 560px) {
-      main { padding: 10px; }
-      header { padding: 17px; }
-      .grid { grid-template-columns: 1fr; }
-      .full { grid-column: auto; }
-      #map { height: 300px; }
-      .actions button, .actions .btn { flex: 1 1 auto; }
-    }
-  </style>
+<style>
+:root {
+  color-scheme: dark;
+  --bg:#0b1120;
+  --panel:#141d30;
+  --line:#28364c;
+  --text:#edf3ff;
+  --muted:#9aabc4;
+  --blue:#3b82f6;
+  --green:#16a34a;
+  --red:#dc2626;
+}
+* { box-sizing:border-box; }
+[hidden] { display:none !important; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+header {
+  background:#111a2b;
+  border-bottom:1px solid var(--line);
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+header h1 { margin:0; font-size:22px; }
+header p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+main { max-width:1200px; margin:auto; padding:16px; }
+.panel {
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:16px;
+}
+h2 { font-size:18px; margin:0 0 14px; }
+label {
+  display:block;
+  margin:10px 0 6px;
+  font-size:13px;
+  color:#c8d6eb;
+}
+input,textarea,button {
+  font:inherit;
+}
+input,textarea {
+  width:100%;
+  padding:11px;
+  color:var(--text);
+  background:#0b1323;
+  border:1px solid #34445e;
+  border-radius:8px;
+  outline:none;
+}
+input:focus,textarea:focus {
+  border-color:var(--blue);
+}
+textarea { min-height:75px; resize:vertical; }
+button {
+  border:0;
+  border-radius:8px;
+  padding:10px 13px;
+  color:white;
+  background:var(--blue);
+  cursor:pointer;
+  font-weight:600;
+}
+button:disabled { opacity:.6; cursor:wait; }
+.btn-green { background:var(--green); }
+.btn-red { background:var(--red); }
+.btn-gray { background:#334155; }
+.actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:16px;
+}
+.stat {
+  padding:14px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:12px;
+}
+.stat strong { display:block; font-size:24px; margin-top:5px; }
+.muted { color:var(--muted); font-size:13px; }
+#map {
+  height:360px;
+  border-radius:10px;
+  overflow:hidden;
+  background:#202b3e;
+}
+#customerList {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+.customer {
+  background:#0e1728;
+  border:1px solid var(--line);
+  padding:13px;
+  border-radius:10px;
+  min-width:0;
+}
+.customer h3 { margin:0 0 8px; font-size:16px; }
+.customer p {
+  margin:5px 0;
+  color:#c4d1e4;
+  font-size:13px;
+  overflow-wrap:anywhere;
+}
+.customer .actions button { font-size:12px; padding:8px 10px; }
+.status {
+  margin-top:12px;
+  padding:10px;
+  border-radius:8px;
+  background:#0b1323;
+  color:#cbd5e1;
+  font-size:13px;
+  overflow-wrap:anywhere;
+}
+.status.error { color:#fca5a5; }
+.status.success { color:#86efac; }
+.search-row { margin-bottom:12px; }
+.small-note { font-size:12px; color:var(--muted); line-height:1.6; }
+@media(max-width:650px) {
+  .grid,#customerList { grid-template-columns:1fr; }
+  .stats { grid-template-columns:1fr; }
+  #map { height:300px; }
+  header h1 { font-size:19px; }
+}
+</style>
 </head>
 
 <body>
+
 <header>
-  <h1>WansTeknik</h1>
-  <p>Data pelanggan · Koordinat · Google Maps</p>
+  <div>
+    <h1>WansTeknik</h1>
+    <p>Manajemen Data Pelanggan</p>
+  </div>
+  <button id="logoutBtn" class="btn-gray" hidden>Logout</button>
 </header>
 
-<main>
-  <div class="stats">
-    <div class="stat">
-      <span>Total pelanggan</span>
-      <strong id="total">0</strong>
-    </div>
-    <div class="stat">
-      <span>Pelanggan dengan koordinat</span>
-      <strong id="totalKoordinat">0</strong>
-    </div>
-  </div>
+<!-- LOGIN -->
+<main id="loginMain">
+  <section class="panel" style="max-width:440px;margin:35px auto">
+    <h2>Login WansTeknik</h2>
+    <p class="muted">Masuk untuk mengelola data pelanggan.</p>
 
-  <section class="panel">
-    <h2 id="formTitle">Tambah pelanggan</h2>
+    <form id="loginForm">
+      <label for="loginEmail">Email</label>
+      <input id="loginEmail" type="email" autocomplete="username"
+        placeholder="Email akun Supabase" required>
 
-    <form id="customerForm">
-      <input type="hidden" id="editId">
-
-      <div class="grid">
-        <div>
-          <label for="kode">Kode pelanggan</label>
-          <input id="kode" placeholder="Contoh: WNS-001">
-        </div>
-
-        <div>
-          <label for="nama">Nama pelanggan *</label>
-          <input id="nama" required placeholder="Nama pelanggan">
-        </div>
-
-        <div class="full">
-          <label for="telepon">Nomor telepon</label>
-          <input id="telepon" type="tel" placeholder="08xxxxxxxxxx">
-        </div>
-
-        <div class="full">
-          <label for="alamat">Alamat pelanggan</label>
-          <textarea id="alamat" placeholder="Alamat lengkap pelanggan"></textarea>
-        </div>
-
-        <div>
-          <label for="lat">Latitude</label>
-          <input id="lat" inputmode="decimal" placeholder="-2.9909">
-        </div>
-
-        <div>
-          <label for="lng">Longitude</label>
-          <input id="lng" inputmode="decimal" placeholder="104.7566">
-        </div>
-
-        <div class="full small">
-          Masukkan koordinat desimal, atau tempel tautan Google Maps di kolom koordinat.
-          Contoh: -2.9909, 104.7566
-        </div>
-      </div>
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password"
+        autocomplete="current-password" placeholder="Password"
+        required>
 
       <div class="actions">
-        <button type="submit" id="saveBtn">Simpan pelanggan</button>
-        <button type="button" class="secondary" id="getLocationBtn">
-          Gunakan lokasi HP
-        </button>
-        <button type="button" class="ghost" id="resetBtn">Batal / Bersihkan</button>
+        <button id="loginBtn" type="submit">Login</button>
       </div>
     </form>
 
-    <div class="status" id="status">Menghubungkan ke database...</div>
+    <div id="loginStatus" class="status" role="status">
+      Silakan login menggunakan akun yang sudah dibuat di Supabase.
+    </div>
+    <p class="small-note">
+      Pendaftaran akun tidak tersedia di halaman ini.
+    </p>
+  </section>
+</main>
+
+<!-- APLIKASI: hanya ditampilkan setelah login -->
+<main id="appMain" hidden>
+
+  <section class="stats">
+    <div class="stat">
+      <span class="muted">Total Pelanggan</span>
+      <strong id="totalCustomers">0</strong>
+    </div>
+    <div class="stat">
+      <span class="muted">Memiliki Koordinat</span>
+      <strong id="mappedCustomers">0</strong>
+    </div>
+    <div class="stat">
+      <span class="muted">Hasil Pencarian</span>
+      <strong id="shownCustomers">0</strong>
+    </div>
   </section>
 
   <section class="panel">
-    <h2>Peta pelanggan</h2>
+    <h2 id="formTitle">Tambah Pelanggan</h2>
+
+    <form id="customerForm">
+      <div class="grid">
+        <div>
+          <label for="kode">Kode Pelanggan *</label>
+          <input id="kode" maxlength="100" required
+            placeholder="Contoh: WNS001">
+        </div>
+        <div>
+          <label for="nama">Nama Pelanggan *</label>
+          <input id="nama" maxlength="200" required
+            placeholder="Nama lengkap">
+        </div>
+        <div>
+          <label for="telepon">Nomor Telepon</label>
+          <input id="telepon" maxlength="50"
+            placeholder="08xxxxxxxxxx">
+        </div>
+        <div>
+          <label for="alamat">Alamat</label>
+          <textarea id="alamat" maxlength="2000"
+            placeholder="Alamat pelanggan"></textarea>
+        </div>
+        <div>
+          <label for="lat">Latitude</label>
+          <input id="lat" type="number" step="any"
+            min="-90" max="90" placeholder="-2.9761">
+        </div>
+        <div>
+          <label for="lng">Longitude</label>
+          <input id="lng" type="number" step="any"
+            min="-180" max="180" placeholder="104.7754">
+        </div>
+      </div>
+
+      <p class="small-note">
+        Isi latitude dan longitude untuk menampilkan pelanggan di peta.
+        Klik peta untuk memilih koordinat.
+      </p>
+
+      <div class="actions">
+        <button id="saveBtn" type="submit" class="btn-green">
+          Simpan Pelanggan
+        </button>
+        <button id="cancelEditBtn" type="button" class="btn-gray" hidden>
+          Batal Edit
+        </button>
+        <button id="locateBtn" type="button" class="btn-gray">
+          Gunakan Lokasi Saya
+        </button>
+      </div>
+    </form>
+    <div id="appStatus" class="status" role="status">
+      Menyiapkan aplikasi...
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Peta Pelanggan</h2>
     <div id="map"></div>
-    <p class="small">Tekan penanda pada peta untuk melihat pelanggan dan membuka navigasi.</p>
+    <p class="small-note">
+      Peta membutuhkan koneksi internet. Klik peta untuk mengisi
+      koordinat pada formulir.
+    </p>
   </section>
 
   <section class="panel">
-    <h2>Daftar pelanggan</h2>
+    <h2>Daftar Pelanggan</h2>
 
-    <input id="search" placeholder="Cari nama, kode, nomor, atau alamat...">
+    <div class="search-row">
+      <label for="searchInput">Cari pelanggan</label>
+      <input id="searchInput" placeholder="Cari kode, nama, telepon, alamat...">
+    </div>
 
     <div class="actions">
-      <button type="button" class="secondary" id="refreshBtn">Muat ulang</button>
-      <button type="button" class="success" id="exportBtn">Ekspor JSON</button>
-      <button type="button" class="secondary" id="importBtn">Impor JSON</button>
-      <input id="importFile" type="file" accept=".json,application/json" hidden>
+      <button id="refreshBtn" type="button" class="btn-gray">
+        Muat Ulang
+      </button>
+      <button id="exportBtn" type="button">
+        Ekspor JSON
+      </button>
+      <button id="importBtn" type="button" class="btn-gray">
+        Impor JSON
+      </button>
+      <input id="importFile" type="file" accept=".json,application/json"
+        hidden>
     </div>
 
-    <div id="customerList">
-      <div class="empty">Memuat data...</div>
-    </div>
+    <div id="customerList"></div>
   </section>
+
 </main>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -315,22 +318,35 @@
 <script>
 'use strict';
 
-/* KONFIGURASI SUPABASE WANSTEKNIK */
+/* KONFIGURASI SUPABASE */
 const SUPABASE_URL = 'https://leztyxlqeybrjsdkndkq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_giQLIC9qFPU-4HVQDd4vGw_sIdwOg8z';
 const TABLE = 'pelanggan';
 
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 let customers = [];
-let markers = [];
-let map;
-let markerLayer;
+let map = null;
+let markerLayer = null;
+let editId = null;
+let busy = false;
 
+/* ELEMENT */
 const $ = id => document.getElementById(id);
 
-function setStatus(message) {
-  $('status').textContent = message;
+function setStatus(message, type = '') {
+  const el = $('appStatus');
+  el.textContent = message;
+  el.className = 'status' + (type ? ' ' + type : '');
+}
+
+function setLoginStatus(message, isError = false) {
+  const el = $('loginStatus');
+  el.textContent = message;
+  el.className = 'status' + (isError ? ' error' : '');
 }
 
 function escapeHtml(value) {
@@ -343,444 +359,615 @@ function escapeHtml(value) {
   })[char]);
 }
 
-function validCoord(lat, lng) {
-  if (lat === null || lng === null ||
-      lat === undefined || lng === undefined ||
-      String(lat).trim() === '' || String(lng).trim() === '') {
-    return false;
-  }
+function showApp() {
+  $('loginMain').hidden = true;
+  $('appMain').hidden = false;
+  $('logoutBtn').hidden = false;
 
-  const a = Number(lat);
-  const b = Number(lng);
+  if (!map) initMap();
 
-  return Number.isFinite(a) && Number.isFinite(b) &&
-    a >= -90 && a <= 90 && b >= -180 && b <= 180;
+  setTimeout(() => {
+    if (map) map.invalidateSize();
+  }, 150);
 }
 
-/* MEMBUKA GOOGLE MAPS */
-function bukaGoogleMaps(lat, lng, navigasi = false) {
-  if (!validCoord(lat, lng)) {
-    alert('Koordinat pelanggan belum valid.');
-    return;
-  }
+function showLogin() {
+  $('appMain').hidden = true;
+  $('loginMain').hidden = false;
+  $('logoutBtn').hidden = true;
+  customers = [];
+  editId = null;
+  $('customerList').replaceChildren();
+  $('totalCustomers').textContent = '0';
+  $('mappedCustomers').textContent = '0';
+  $('shownCustomers').textContent = '0';
 
-  const tujuan = `${Number(lat)},${Number(lng)}`;
-
-  const url = navigasi
-    ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(tujuan)}&travelmode=driving`
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(tujuan)}`;
-
-  /* Membuka URL langsung dari tindakan pengguna */
-  window.location.href = url;
+  if (markerLayer) markerLayer.clearLayers();
 }
 
-/* MEMBACA KOORDINAT DARI TEKS ATAU LINK MAPS */
-function parseCoordinates(value) {
-  const text = String(value || '').trim();
-
-  const match = text.match(
-    /(-?\d{1,3}\.\d+)\s*[, ]\s*(-?\d{1,3}\.\d+)/
-  );
-
-  if (match) {
-    const lat = Number(match[1]);
-    const lng = Number(match[2]);
-    if (validCoord(lat, lng)) return { lat, lng };
-  }
-
-  return null;
-}
-
-function parseGoogleMapsLink(value) {
-  const text = String(value || '').trim();
-
-  let result = text.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-  if (result) {
-    const lat = Number(result[1]);
-    const lng = Number(result[2]);
-    if (validCoord(lat, lng)) return { lat, lng };
-  }
-
-  result = text.match(/[?&](?:q|query|destination|daddr)=(-?\d+(?:\.\d+)?)[,%2C ]+(-?\d+(?:\.\d+)?)/i);
-  if (result) {
-    const lat = Number(result[1]);
-    const lng = Number(result[2]);
-    if (validCoord(lat, lng)) return { lat, lng };
-  }
-
-  return parseCoordinates(text);
-}
-
+/* PETA */
 function initMap() {
-  map = L.map('map').setView([-2.9909, 104.7566], 11);
+  if (map) return;
+
+  map = L.map('map').setView([-2.9761, 104.7754], 12);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 19
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
   }).addTo(map);
 
-  markerLayer = L.featureGroup().addTo(map);
+  markerLayer = L.layerGroup().addTo(map);
+
+  map.on('click', event => {
+    $('lat').value = event.latlng.lat.toFixed(7);
+    $('lng').value = event.latlng.lng.toFixed(7);
+    setStatus('Koordinat berhasil dipilih dari peta.');
+  });
 }
 
-function updateStats() {
-  $('total').textContent = customers.length;
-  $('totalKoordinat').textContent =
-    customers.filter(c => validCoord(c.lat, c.lng)).length;
+function hasCoordinates(c) {
+  return Number.isFinite(Number(c.lat)) &&
+    c.lat !== null && c.lat !== '' &&
+    Number.isFinite(Number(c.lng)) &&
+    c.lng !== null && c.lng !== '' &&
+    Number(c.lat) >= -90 && Number(c.lat) <= 90 &&
+    Number(c.lng) >= -180 && Number(c.lng) <= 180;
 }
 
 function renderMarkers() {
+  if (!markerLayer) return;
   markerLayer.clearLayers();
 
-  customers.forEach(c => {
-    if (!validCoord(c.lat, c.lng)) return;
+  const term = $('searchInput').value.trim().toLowerCase();
 
-    const lat = Number(c.lat);
-    const lng = Number(c.lng);
-    const marker = L.marker([lat, lng]);
+  customers
+    .filter(c => {
+      const text = [c.kode, c.nama, c.telepon, c.alamat]
+        .join(' ').toLowerCase();
+      return text.includes(term);
+    })
+    .filter(hasCoordinates)
+    .forEach(c => {
+      const marker = L.marker([Number(c.lat), Number(c.lng)]);
+      const popup = document.createElement('div');
 
-    const name = escapeHtml(c.nama || 'Tanpa nama');
-    const address = escapeHtml(c.alamat || 'Alamat belum diisi');
+      const name = document.createElement('strong');
+      name.textContent = c.nama || 'Tanpa nama';
+      popup.appendChild(name);
 
-    const popup = document.createElement('div');
-    const title = document.createElement('strong');
-    title.textContent = name;
+      const code = document.createElement('div');
+      code.textContent = 'Kode: ' + (c.kode || '-');
+      popup.appendChild(code);
 
-    const addr = document.createElement('p');
-    addr.textContent = address;
+      const address = document.createElement('div');
+      address.textContent = c.alamat || '-';
+      popup.appendChild(address);
 
-    const openBtn = document.createElement('button');
-    openBtn.type = 'button';
-    openBtn.textContent = 'Buka Maps';
-    openBtn.onclick = () => bukaGoogleMaps(lat, lng, false);
-
-    const navBtn = document.createElement('button');
-    navBtn.type = 'button';
-    navBtn.textContent = 'Navigasi';
-    navBtn.style.background = '#16a34a';
-    navBtn.onclick = () => bukaGoogleMaps(lat, lng, true);
-
-    popup.append(title, addr, openBtn, navBtn);
-    marker.bindPopup(popup);
-    marker.addTo(markerLayer);
-  });
+      marker.bindPopup(popup).addTo(markerLayer);
+    });
 }
 
+function updateStats(filtered) {
+  $('totalCustomers').textContent = customers.length;
+  $('mappedCustomers').textContent = customers.filter(hasCoordinates).length;
+  $('shownCustomers').textContent = filtered.length;
+}
+
+/* DAFTAR PELANGGAN */
 function renderList() {
-  const query = $('search').value.trim().toLowerCase();
+  const list = $('customerList');
+  const term = $('searchInput').value.trim().toLowerCase();
 
-  const filtered = customers.filter(c => [
-    c.kode, c.nama, c.telepon, c.alamat
-  ].some(v => String(v || '').toLowerCase().includes(query)));
+  const filtered = customers.filter(c =>
+    [c.kode, c.nama, c.telepon, c.alamat]
+      .join(' ').toLowerCase().includes(term)
+  );
 
-  const container = $('customerList');
+  updateStats(filtered);
+  list.replaceChildren();
 
   if (!filtered.length) {
-    container.innerHTML = '<div class="empty">Belum ada data pelanggan yang cocok.</div>';
+    const empty = document.createElement('p');
+    empty.className = 'muted';
+    empty.textContent = customers.length
+      ? 'Tidak ada pelanggan yang cocok dengan pencarian.'
+      : 'Belum ada data pelanggan.';
+    list.appendChild(empty);
+    renderMarkers();
     return;
   }
 
-  container.innerHTML = filtered.map(c => {
-    const id = JSON.stringify(String(c.id));
-    const hasCoord = validCoord(c.lat, c.lng);
+  filtered.forEach(c => {
+    const card = document.createElement('article');
+    card.className = 'customer';
 
-    return `
-      <article class="customer">
-        <h3>${escapeHtml(c.nama || 'Tanpa nama')}</h3>
-        <p>Kode: ${escapeHtml(c.kode || '-')}</p>
-        <p>Telepon: ${escapeHtml(c.telepon || '-')}</p>
-        <p>Alamat: ${escapeHtml(c.alamat || '-')}</p>
-        <p>Koordinat: ${
-          hasCoord
-            ? escapeHtml(`${c.lat}, ${c.lng}`)
-            : 'Belum tersedia'
-        }</p>
+    const title = document.createElement('h3');
+    title.textContent = (c.nama || 'Tanpa nama') + ' · ' + (c.kode || '-');
+    card.appendChild(title);
 
-        <div class="actions">
-          ${hasCoord ? `
-            <button type="button" class="secondary"
-              onclick="bukaGoogleMaps(${Number(c.lat)},${Number(c.lng)},false)">
-              Buka Maps
-            </button>
-            <button type="button" class="success"
-              onclick="bukaGoogleMaps(${Number(c.lat)},${Number(c.lng)},true)">
-              Navigasi
-            </button>
-            <button type="button" class="ghost"
-              onclick="lihatDiPeta(${Number(c.lat)},${Number(c.lng)})">
-              Lihat Peta
-            </button>
-          ` : ''}
+    const phone = document.createElement('p');
+    phone.textContent = 'Telepon: ' + (c.telepon || '-');
+    card.appendChild(phone);
 
-          <button type="button" class="secondary"
-            onclick="editCustomer(${id})">Edit</button>
+    const address = document.createElement('p');
+    address.textContent = 'Alamat: ' + (c.alamat || '-');
+    card.appendChild(address);
 
-          <button type="button" class="danger"
-            onclick="deleteCustomer(${id})">Hapus</button>
-        </div>
-      </article>
-    `;
-  }).join('');
-}
+    const coord = document.createElement('p');
+    coord.textContent = hasCoordinates(c)
+      ? 'Koordinat: ' + c.lat + ', ' + c.lng
+      : 'Koordinat: belum diisi';
+    card.appendChild(coord);
 
-function lihatDiPeta(lat, lng) {
-  if (!validCoord(lat, lng)) return;
-  map.setView([Number(lat), Number(lng)], 16);
-  markerLayer.eachLayer(marker => {
-    const point = marker.getLatLng();
-    if (point.lat === Number(lat) && point.lng === Number(lng)) {
-      marker.openPopup();
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.type = 'button';
+    editButton.dataset.action = 'edit';
+    editButton.dataset.id = String(c.id);
+    actions.appendChild(editButton);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Hapus';
+    deleteButton.type = 'button';
+    deleteButton.className = 'btn-red';
+    deleteButton.dataset.action = 'delete';
+    deleteButton.dataset.id = String(c.id);
+    actions.appendChild(deleteButton);
+
+    if (hasCoordinates(c)) {
+      const mapButton = document.createElement('button');
+      mapButton.textContent = 'Lihat Peta';
+      mapButton.type = 'button';
+      mapButton.className = 'btn-gray';
+      mapButton.dataset.action = 'map';
+      mapButton.dataset.id = String(c.id);
+      actions.appendChild(mapButton);
+
+      const googleButton = document.createElement('button');
+      googleButton.textContent = 'Google Maps';
+      googleButton.type = 'button';
+      googleButton.className = 'btn-gray';
+      googleButton.dataset.action = 'google';
+      googleButton.dataset.id = String(c.id);
+      actions.appendChild(googleButton);
     }
+
+    card.appendChild(actions);
+    list.appendChild(card);
   });
-  $('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  renderMarkers();
 }
 
+/* BACA DATA */
 async function loadCustomers() {
-  setStatus('Mengambil data dari Supabase...');
+  setStatus('Mengambil data pelanggan dari Supabase...');
 
   const { data, error } = await db
     .from(TABLE)
     .select('*')
     .order('kode', { ascending: true });
 
-  if (error) {
-    console.error(error);
-    setStatus('Gagal memuat data: ' + error.message);
-    $('customerList').innerHTML =
-      '<div class="empty">Data gagal dimuat. Periksa koneksi, konfigurasi Supabase, dan izin tabel.</div>';
-    return;
-  }
+  if (error) throw error;
 
   customers = data || [];
-  updateStats();
   renderList();
-  renderMarkers();
-  setStatus('Data berhasil dimuat.');
+  setStatus('Data pelanggan berhasil dimuat.', 'success');
 }
 
-$('customerForm').addEventListener('submit', async event => {
-  event.preventDefault();
-
-  const editId = $('editId').value;
+/* VALIDASI DAN FORM */
+function getPayload() {
+  const kode = $('kode').value.trim();
   const nama = $('nama').value.trim();
+  const telepon = $('telepon').value.trim();
+  const alamat = $('alamat').value.trim();
+  const latValue = $('lat').value.trim();
+  const lngValue = $('lng').value.trim();
 
-  if (!nama) {
-    alert('Nama pelanggan wajib diisi.');
-    return;
+  if (!kode || !nama) {
+    throw new Error('Kode dan nama pelanggan wajib diisi.');
   }
 
-  let latText = $('lat').value.trim();
-  let lngText = $('lng').value.trim();
-
-  /* Jika salah satu kolom berisi link/koordinat lengkap, coba baca otomatis */
-  if (latText && !lngText) {
-    const parsed = parseGoogleMapsLink(latText);
-    if (parsed) {
-      latText = String(parsed.lat);
-      lngText = String(parsed.lng);
-    }
+  if ((latValue && !lngValue) || (!latValue && lngValue)) {
+    throw new Error('Isi latitude dan longitude secara bersamaan.');
   }
 
-  const hasAnyCoord = latText !== '' || lngText !== '';
-  let lat = null;
-  let lng = null;
+  const lat = latValue === '' ? null : Number(latValue);
+  const lng = lngValue === '' ? null : Number(lngValue);
 
-  if (hasAnyCoord) {
-    if (!validCoord(latText, lngText)) {
-      alert('Koordinat tidak valid. Isi latitude dan longitude dengan benar.');
-      return;
-    }
-    lat = Number(latText);
-    lng = Number(lngText);
+  if (lat !== null &&
+      (!Number.isFinite(lat) || lat < -90 || lat > 90)) {
+    throw new Error('Latitude harus antara -90 dan 90.');
   }
 
-  const payload = {
-    kode: $('kode').value.trim() || null,
-    nama,
-    telepon: $('telepon').value.trim() || null,
-    alamat: $('alamat').value.trim() || null,
-    lat,
-    lng
+  if (lng !== null &&
+      (!Number.isFinite(lng) || lng < -180 || lng > 180)) {
+    throw new Error('Longitude harus antara -180 dan 180.');
+  }
+
+  return {
+    kode, nama,
+    telepon: telepon || null,
+    alamat: alamat || null,
+    lat, lng
   };
+}
 
-  $('saveBtn').disabled = true;
-  setStatus('Menyimpan data...');
-
-  let result;
-
-  if (editId) {
-    result = await db.from(TABLE).update(payload).eq('id', editId);
-  } else {
-    result = await db.from(TABLE).insert([payload]);
-  }
-
-  $('saveBtn').disabled = false;
-
-  if (result.error) {
-    console.error(result.error);
-    setStatus('Gagal menyimpan: ' + result.error.message);
-    alert('Gagal menyimpan data.\n' + result.error.message);
-    return;
-  }
-
-  resetForm();
-  await loadCustomers();
-  setStatus('Data pelanggan berhasil disimpan.');
-});
+function resetForm() {
+  $('customerForm').reset();
+  editId = null;
+  $('formTitle').textContent = 'Tambah Pelanggan';
+  $('saveBtn').textContent = 'Simpan Pelanggan';
+  $('cancelEditBtn').hidden = true;
+}
 
 function editCustomer(id) {
   const c = customers.find(item => String(item.id) === String(id));
-  if (!c) return;
+  if (!c) return setStatus('Data pelanggan tidak ditemukan.', 'error');
 
-  $('editId').value = c.id;
+  editId = c.id;
   $('kode').value = c.kode || '';
   $('nama').value = c.nama || '';
   $('telepon').value = c.telepon || '';
   $('alamat').value = c.alamat || '';
   $('lat').value = c.lat ?? '';
   $('lng').value = c.lng ?? '';
-  $('formTitle').textContent = 'Edit pelanggan';
-  $('saveBtn').textContent = 'Simpan perubahan';
 
+  $('formTitle').textContent = 'Edit Pelanggan';
+  $('saveBtn').textContent = 'Simpan Perubahan';
+  $('cancelEditBtn').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function saveCustomer(event) {
+  event.preventDefault();
+  if (busy) return;
+
+  busy = true;
+  $('saveBtn').disabled = true;
+
+  try {
+    const payload = getPayload();
+
+    if (editId === null) {
+      const { error } = await db
+        .from(TABLE)
+        .insert([payload])
+        .select('id');
+
+      if (error) throw error;
+      resetForm();
+      await loadCustomers();
+      setStatus('Pelanggan berhasil ditambahkan.', 'success');
+    } else {
+      const { data, error } = await db
+        .from(TABLE)
+        .update(payload)
+        .eq('id', editId)
+        .select('id');
+
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        throw new Error(
+          'Data tidak berubah. Periksa UUID akun dan kebijakan RLS.'
+        );
+      }
+
+      resetForm();
+      await loadCustomers();
+      setStatus('Data pelanggan berhasil diperbarui.', 'success');
+    }
+  } catch (error) {
+    console.error(error);
+    setStatus('Gagal menyimpan: ' + error.message, 'error');
+  } finally {
+    busy = false;
+    $('saveBtn').disabled = false;
+  }
 }
 
 async function deleteCustomer(id) {
   const c = customers.find(item => String(item.id) === String(id));
   if (!c) return;
 
-  if (!confirm(`Hapus data pelanggan "${c.nama}"?`)) return;
+  if (!confirm('Hapus pelanggan ' + c.nama + ' (' + c.kode + ')?')) {
+    return;
+  }
 
-  setStatus('Menghapus data...');
+  try {
+    const { data, error } = await db
+      .from(TABLE)
+      .delete()
+      .eq('id', id)
+      .select('id');
 
-  const { error } = await db.from(TABLE).delete().eq('id', id);
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      throw new Error(
+        'Tidak ada data yang dihapus. Periksa izin RLS akunmu.'
+      );
+    }
 
-  if (error) {
+    if (String(editId) === String(id)) resetForm();
+
+    await loadCustomers();
+    setStatus('Pelanggan berhasil dihapus.', 'success');
+  } catch (error) {
     console.error(error);
-    setStatus('Gagal menghapus: ' + error.message);
-    alert('Gagal menghapus data: ' + error.message);
-    return;
+    setStatus('Gagal menghapus: ' + error.message, 'error');
   }
-
-  await loadCustomers();
-  setStatus('Data pelanggan berhasil dihapus.');
 }
 
-function resetForm() {
-  $('customerForm').reset();
-  $('editId').value = '';
-  $('formTitle').textContent = 'Tambah pelanggan';
-  $('saveBtn').textContent = 'Simpan pelanggan';
+function lihatDiPeta(id) {
+  const c = customers.find(item => String(item.id) === String(id));
+  if (!c || !hasCoordinates(c)) return;
+
+  map.setView([Number(c.lat), Number(c.lng)], 16);
+  markerLayer.eachLayer(marker => {
+    const pos = marker.getLatLng();
+    if (
+      Math.abs(pos.lat - Number(c.lat)) < 0.0000001 &&
+      Math.abs(pos.lng - Number(c.lng)) < 0.0000001
+    ) {
+      marker.openPopup();
+    }
+  });
 }
 
-$('resetBtn').addEventListener('click', resetForm);
-$('refreshBtn').addEventListener('click', loadCustomers);
-$('search').addEventListener('input', renderList);
+function bukaGoogleMaps(id) {
+  const c = customers.find(item => String(item.id) === String(id));
+  if (!c || !hasCoordinates(c)) return;
 
-$('getLocationBtn').addEventListener('click', () => {
-  if (!navigator.geolocation) {
-    alert('Browser ini tidak mendukung GPS.');
-    return;
-  }
+  const url = 'https://www.google.com/maps?q=' +
+    encodeURIComponent(c.lat + ',' + c.lng);
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
 
-  setStatus('Mengambil lokasi HP...');
+/* IMPOR DAN EKSPOR JSON */
+function exportJSON() {
+  const data = customers.map(c => ({
+    kode: c.kode,
+    nama: c.nama,
+    telepon: c.telepon,
+    alamat: c.alamat,
+    lat: c.lat,
+    lng: c.lng
+  }));
 
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      $('lat').value = position.coords.latitude;
-      $('lng').value = position.coords.longitude;
-      setStatus('Lokasi HP berhasil diambil.');
-    },
-    error => {
-      setStatus('Lokasi gagal diambil.');
-      alert('Tidak bisa mengambil lokasi. Aktifkan GPS dan izin lokasi browser. ' + error.message);
-    },
-    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-  );
-});
-
-$('exportBtn').addEventListener('click', () => {
   const blob = new Blob(
-    [JSON.stringify(customers, null, 2)],
-    { type: 'application/json' }
+    [JSON.stringify(data, null, 2)],
+    { type: 'application/json;charset=utf-8' }
   );
 
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = 'wansteknik-pelanggan.json';
+  document.body.appendChild(a);
   a.click();
+  a.remove();
   URL.revokeObjectURL(url);
-});
 
-$('importBtn').addEventListener('click', () => $('importFile').click());
+  setStatus('Ekspor JSON selesai.', 'success');
+}
 
-$('importFile').addEventListener('change', async event => {
-  const file = event.target.files[0];
+async function importJSON(file) {
   if (!file) return;
 
   try {
     const parsed = JSON.parse(await file.text());
-
     if (!Array.isArray(parsed)) {
-      throw new Error('File harus berisi daftar pelanggan berbentuk JSON array.');
+      throw new Error('Format JSON harus berupa array data pelanggan.');
+    }
+    if (!parsed.length) {
+      throw new Error('File JSON tidak berisi data.');
     }
 
-    if (!confirm(`Impor ${parsed.length} data pelanggan ke database?`)) {
-      event.target.value = '';
-      return;
-    }
+    const rows = parsed.map((item, index) => {
+      if (!item || typeof item !== 'object' ||
+          !String(item.kode || '').trim() ||
+          !String(item.nama || '').trim()) {
+        throw new Error(
+          'Data baris ke-' + (index + 1) +
+          ' harus memiliki kode dan nama.'
+        );
+      }
 
-    let success = 0;
-    let failed = 0;
-
-    for (const item of parsed) {
-      const payload = {
-        kode: item.kode || null,
-        nama: String(item.nama || '').trim(),
-        telepon: item.telepon || null,
-        alamat: item.alamat || null,
-        lat: validCoord(item.lat, item.lng) ? Number(item.lat) : null,
-        lng: validCoord(item.lat, item.lng) ? Number(item.lng) : null
+      const row = {
+        kode: String(item.kode).trim(),
+        nama: String(item.nama).trim(),
+        telepon: item.telepon ? String(item.telepon).trim() : null,
+        alamat: item.alamat ? String(item.alamat).trim() : null,
+        lat: item.lat === '' || item.lat == null ? null : Number(item.lat),
+        lng: item.lng === '' || item.lng == null ? null : Number(item.lng)
       };
 
-      if (!payload.nama) {
-        failed++;
-        continue;
+      if ((row.lat === null) !== (row.lng === null)) {
+        throw new Error(
+          'Latitude dan longitude baris ke-' +
+          (index + 1) + ' harus diisi bersamaan.'
+        );
       }
 
-      /* Lewati id agar database membuat ID baru dan tidak bentrok */
-      const { error } = await db.from(TABLE).insert([payload]);
-
-      if (error) {
-        console.error(error);
-        failed++;
-      } else {
-        success++;
+      if (row.lat !== null &&
+          (!Number.isFinite(row.lat) || row.lat < -90 || row.lat > 90)) {
+        throw new Error('Latitude baris ke-' + (index + 1) + ' tidak valid.');
       }
-    }
+
+      if (row.lng !== null &&
+          (!Number.isFinite(row.lng) || row.lng < -180 || row.lng > 180)) {
+        throw new Error('Longitude baris ke-' + (index + 1) + ' tidak valid.');
+      }
+
+      return row;
+    });
+
+    const ok = confirm(
+      'Impor ' + rows.length + ' data? ' +
+      'Kode yang sudah ada akan diperbarui.'
+    );
+    if (!ok) return;
+
+    setStatus('Mengimpor data pelanggan...');
+
+    const { error } = await db
+      .from(TABLE)
+      .upsert(rows, { onConflict: 'kode' });
+
+    if (error) throw error;
 
     await loadCustomers();
-    alert(`Impor selesai.\nBerhasil: ${success}\nGagal: ${failed}`);
-  } catch (error) {
-    alert('Gagal membaca file: ' + error.message);
-  }
-
-  event.target.value = '';
-});
-
-async function startApp() {
-  try {
-    initMap();
-    await loadCustomers();
+    setStatus(rows.length + ' data berhasil diimpor.', 'success');
   } catch (error) {
     console.error(error);
-    setStatus('Aplikasi gagal dimulai: ' + error.message);
+    setStatus('Impor gagal: ' + error.message, 'error');
+  } finally {
+    $('importFile').value = '';
   }
 }
-window.editCustomer = editCustomer;
-window.deleteCustomer = deleteCustomer;
-window.bukaGoogleMaps = bukaGoogleMaps;
-window.lihatDiPeta = lihatDiPeta;
+
+/* EVENT LISTENERS */
+$('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const button = $('loginBtn');
+  button.disabled = true;
+  setLoginStatus('Memeriksa akun...');
+
+  try {
+    const email = $('loginEmail').value.trim();
+    const password = $('loginPassword').value;
+
+    const { error } = await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    showApp();
+
+    try {
+      await loadCustomers();
+    } catch (error) {
+      console.error(error);
+      setStatus('Gagal memuat data: ' + error.message, 'error');
+    }
+  } catch (error) {
+    console.error(error);
+    setLoginStatus('Login gagal: ' + error.message, true);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$('logoutBtn').addEventListener('click', async () => {
+  if (!confirm('Yakin ingin logout?')) return;
+
+  try {
+    const { error } = await db.auth.signOut();
+    if (error) throw error;
+
+    showLogin();
+    setLoginStatus('Kamu sudah logout.');
+    $('loginPassword').value = '';
+  } catch (error) {
+    setStatus('Logout gagal: ' + error.message, 'error');
+  }
+});
+
+$('customerForm').addEventListener('submit', saveCustomer);
+$('cancelEditBtn').addEventListener('click', resetForm);
+
+$('searchInput').addEventListener('input', renderList);
+
+$('customerList').addEventListener('click', event => {
+  const button = event.target.closest('button[data-action]');
+  if (!button) return;
+
+  const id = button.dataset.id;
+
+  if (button.dataset.action === 'edit') editCustomer(id);
+  if (button.dataset.action === 'delete') deleteCustomer(id);
+  if (button.dataset.action === 'map') lihatDiPeta(id);
+  if (button.dataset.action === 'google') bukaGoogleMaps(id);
+});
+
+$('refreshBtn').addEventListener('click', async () => {
+  try {
+    await loadCustomers();
+  } catch (error) {
+    setStatus('Gagal memuat ulang: ' + error.message, 'error');
+  }
+});
+
+$('exportBtn').addEventListener('click', exportJSON);
+
+$('importBtn').addEventListener('click', () => {
+  $('importFile').click();
+});
+
+$('importFile').addEventListener('change', event => {
+  importJSON(event.target.files[0]);
+});
+
+$('locateBtn').addEventListener('click', () => {
+  if (!navigator.geolocation) {
+    setStatus('Browser tidak mendukung lokasi GPS.', 'error');
+    return;
+  }
+
+  setStatus('Meminta lokasi perangkat...');
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      $('lat').value = position.coords.latitude.toFixed(7);
+      $('lng').value = position.coords.longitude.toFixed(7);
+
+      if (map) {
+        map.setView([
+          position.coords.latitude,
+          position.coords.longitude
+        ], 16);
+      }
+
+      setStatus('Lokasi perangkat berhasil diambil.', 'success');
+    },
+    error => {
+      setStatus('Lokasi gagal diambil: ' + error.message, 'error');
+    },
+    { enableHighAccuracy: true, timeout: 15000 }
+  );
+});
+
+/* CEK SESSION SAAT APLIKASI DIBUKA */
+async function startApp() {
+  try {
+    const { data, error } = await db.auth.getSession();
+    if (error) throw error;
+
+    if (data.session) {
+      showApp();
+
+      try {
+        await loadCustomers();
+      } catch (error) {
+        console.error(error);
+        setStatus('Gagal memuat data: ' + error.message, 'error');
+      }
+    } else {
+      showLogin();
+    }
+  } catch (error) {
+    console.error(error);
+    showLogin();
+    setLoginStatus('Gagal memeriksa sesi: ' + error.message, true);
+  }
+}
+
 startApp();
 </script>
 </body>
